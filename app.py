@@ -4,7 +4,6 @@ from streamlit_chat import message
 from PIL import Image
 
 import os
-
 from langchain.llms import OpenAI
 from ingest_data import embed_doc
 from query_data import _template, CONDENSE_QUESTION_PROMPT, QA_PROMPT, get_chain
@@ -42,9 +41,9 @@ def generate_answer():
 
     print(len(docs))
     # PART 2 ADDED: CALLBACK FOR TOKEN USAGE
-    with get_openai_callback() as cb:
-        output = chain.run(input=user_input, vectorstore = vectorstore, context=docs[:2], chat_history = [], question= user_input, QA_PROMPT=QA_PROMPT, CONDENSE_QUESTION_PROMPT=CONDENSE_QUESTION_PROMPT, template=_template)
-        print(cb.total_tokens)
+    # with get_openai_callback() as cb:
+    #     output = chain.run(input=user_input, vectorstore = vectorstore, context=docs[:2], chat_history = [], question= user_input, QA_PROMPT=QA_PROMPT, CONDENSE_QUESTION_PROMPT=CONDENSE_QUESTION_PROMPT, template=_template)
+    #     print(cb.total_tokens)
     
 
     st.session_state.past.append(user_input)
