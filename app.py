@@ -97,7 +97,7 @@ st.sidebar.title(":darkblue[NakheelGPT Demo]")
 st.sidebar.caption("Next-Gen ChatBot built on top of the state of the art AI model - ChatGPT.")
 
 with st.sidebar.expander("Upload a document you would like to chat about! 🚀"):
-    uploaded_file = st.file_uploader("",type=None, accept_multiple_files=False, key=None, help=None, on_change=None, args=None, kwargs=None, disabled=False, label_visibility="visible")
+    uploaded_file = st.file_uploader("Upload",type=None, accept_multiple_files=False, key=None, help=None, on_change=None, args=None, kwargs=None, disabled=False, label_visibility="hidden")
 
     # check if file is uploaded and file does not exist in data folder
     if uploaded_file is not None and uploaded_file.name not in os.listdir("data"):
