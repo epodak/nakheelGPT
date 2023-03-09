@@ -75,7 +75,7 @@ chain = get_chain(vectorstore)
 
 
 # From here down is all the StreamLit UI.
-im_icon = Image.open('content/app_icon.png')
+im_icon = Image.open('content/nakheel_icon.png')
 st.set_page_config(page_title="NakheelGPT", page_icon=im_icon)
 
 hide_default_format = """
