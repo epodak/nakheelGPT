@@ -1,6 +1,6 @@
 langchain
 openai
-faiss-cpu
+chromadb
 streamlit
 streamlit-chat
 unstructured

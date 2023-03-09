@@ -1,9 +1,10 @@
 from langchain.text_splitter import RecursiveCharacterTextSplitter, CharacterTextSplitter
 from langchain.document_loaders import UnstructuredFileLoader, DirectoryLoader
-from langchain.vectorstores.faiss import FAISS
+# from langchain.vectorstores.faiss import FAISS
 from langchain.embeddings import OpenAIEmbeddings
 import pickle
 import os
+from langchain.vectorstores import Chroma
 
 # loader = UnstructuredFileLoader("state_of_the_union.txt")
 def embed_doc():
@@ -26,7 +27,8 @@ def embed_doc():
         # Load Data to vectorstore
         embeddings = OpenAIEmbeddings()
         print("222")
-        vectorstore = FAISS.from_documents(documents, embeddings)
+        # vectorstore = FAISS.from_documents(documents, embeddings)
+        vectorstore = Chroma.from_documents(documents, embeddings)
         print("333")
 
 

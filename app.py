@@ -8,6 +8,8 @@ from langchain.llms import OpenAI
 from ingest_data import embed_doc
 from query_data import _template, CONDENSE_QUESTION_PROMPT, QA_PROMPT, get_chain
 import pickle
+from langchain.vectorstores import Chroma
+from langchain.embeddings import OpenAIEmbeddings
 from langchain.callbacks import get_openai_callback
 import wikipediaapi
 
@@ -68,6 +70,10 @@ def rebuild_index():
             print("Loading vectorstore...")
         chain = get_chain(vectorstore)
 
+vectorstore = Chroma(persist_directory="db/", embedding_function=OpenAIEmbeddings())        
+print("Loading vectorstore...")
+chain = get_chain(vectorstore)
+
 # From here down is all the StreamLit UI.
 im = Image.open('content/App_Icon.png')
 st.set_page_config(page_title="NakheelGPT", page_icon=im)
@@ -96,13 +102,13 @@ with st.sidebar.expander("Upload a document you would like to chat about! 🚀")
             embed_doc()
 
 # open vectorstore.pkl if it exists in current directory
-if "vectorstore.pkl" in os.listdir("."):
-    with open("vectorstore.pkl", "rb") as f:
+# if "vectorstore.pkl" in os.listdir("."):
+#     with open("vectorstore.pkl", "rb") as f:
         
-        vectorstore = pickle.load(f)
-        print("Loading vectorstore...")
+#         vectorstore = pickle.load(f)
+#         print("Loading vectorstore...")
 
-    chain = get_chain(vectorstore)
+#     chain = get_chain(vectorstore)
 
 if "generated" not in st.session_state:
     st.session_state["generated"] = []
