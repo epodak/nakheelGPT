@@ -36,7 +36,7 @@ def wiki_search(topic):
 
 def generate_answer():
     user_input = st.session_state.input
-    docs = vectorstore.similarity_search(user_input)
+    docs = vectorstore.similarity_search(user_input, k=20)
 
     print(len(docs))
     # PART 2 ADDED: CALLBACK FOR TOKEN USAGE
