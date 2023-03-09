@@ -18,6 +18,7 @@ wiki_wiki = wikipediaapi.Wikipedia(
         extract_format=wikipediaapi.ExtractFormat.WIKI
 )
 
+
 def wiki_search(topic):
     page_py = wiki_wiki.page(topic)
     title = page_py.title
@@ -30,11 +31,6 @@ def wiki_search(topic):
         with open(f"data/{title}.txt", "w") as f:
             f.write(text)
 
-# def load_chain():
-#     """Logic for loading the chain you want to use should go here."""
-#     llm = OpenAI(temperature=0)
-#     chain = ConversationChain(llm=llm)
-#     return chain
 
 def generate_answer():
     user_input = st.session_state.input
@@ -62,6 +58,7 @@ def generate_answer():
                 f.write(char)
     print(st.session_state.generated)
 
+
 def rebuild_index():
     with st.spinner('Cramming documents... Hold on! This may take a while...'):
         embed_doc()
@@ -70,13 +67,16 @@ def rebuild_index():
             print("Loading vectorstore...")
         chain = get_chain(vectorstore)
 
+
 vectorstore = Chroma(persist_directory="db/", embedding_function=OpenAIEmbeddings())        
 print("Loaded vectorstore...")
 chain = get_chain(vectorstore)
 
+
+
 # From here down is all the StreamLit UI.
-im = Image.open('content/App_Icon.png')
-st.set_page_config(page_title="NakheelGPT", page_icon=im)
+im_icon = Image.open('content/app_Icon.png')
+st.set_page_config(page_title="NakheelGPT", page_icon=im_icon)
 
 hide_default_format = """
        <style>
@@ -113,8 +113,6 @@ st.text_input("Talk to NakheelGPT: ", value="",  key="input", on_change=generate
 
 st.sidebar.markdown("***")
 st.sidebar.markdown("Do these topics interest you? Click the button below to add it's wiki articles to my knowledge base 🧠")
-# st.markdown('###')
-
 
 # PART 2 ADDED: BUTTONS FOR WIKI ARTICLES
 # buttons need to be in a separate column
@@ -133,6 +131,9 @@ if "topics.txt" in os.listdir("."):
             if col3.button(topics[2]):
                 wiki_search(topics[2])
                 rebuild_index()
+
+im_logo = Image.open("content/nakheel_logo_3.png")
+st.sidebar.image(im_logo, use_column_width='auto')
 
 if st.session_state["generated"]:
 

@@ -14,7 +14,7 @@ def embed_doc():
         # Split text
         text_splitter = RecursiveCharacterTextSplitter(
             # Set a really small chunk size, just to show.
-            chunk_size = 1000,
+            chunk_size = 3000,
             chunk_overlap  = 0,
             length_function = len,
         )
@@ -25,7 +25,6 @@ def embed_doc():
         # Load Data to vectorstore
         embeddings = OpenAIEmbeddings()
         print("222")
-        # vectorstore = FAISS.from_documents(documents, embeddings)
         vectorstore = Chroma.from_documents(documents, embeddings, persist_directory=persist_directory)
         vectorstore.persist()
         vectorstore = None
