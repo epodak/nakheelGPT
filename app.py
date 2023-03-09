@@ -37,36 +37,28 @@ def wiki_search(topic):
 def generate_answer():
     user_input = st.session_state.input
     docs = vectorstore.similarity_search(user_input)
-    # if checkbox is checked, print docs
 
     print(len(docs))
     # PART 2 ADDED: CALLBACK FOR TOKEN USAGE
-    # with get_openai_callback() as cb:
-    #     output = chain.run(input=user_input, vectorstore = vectorstore, context=docs[:2], chat_history = [], question= user_input, QA_PROMPT=QA_PROMPT, CONDENSE_QUESTION_PROMPT=CONDENSE_QUESTION_PROMPT, template=_template)
-    #     print(cb.total_tokens)
+    with get_openai_callback() as cb:
+        output = chain.run(input=user_input, vectorstore = vectorstore, context=docs, chat_history = [], question= user_input, QA_PROMPT=QA_PROMPT, CONDENSE_QUESTION_PROMPT=CONDENSE_QUESTION_PROMPT, template=_template)
+        print(cb.total_tokens)
     
 
     st.session_state.past.append(user_input)
     # print(st.session_state.past)
     st.session_state.generated.append(output)
-    
-    print(st.session_state.generated)
-    # PART2 ADDED
-    # if st.session_state.generation includes "related topics:" remove that from st.session_state.generation and add it to a new list
+    ##ADDED FOR TESTING
     if "#" in st.session_state.generated[-1]:
         st.session_state.generated[-1], st.session_state.topics = st.session_state.generated[-1].split("#")[0], st.session_state.generated[-1].split("#")[1]
-        
-    print(st.session_state.generated)
-    print(st.session_state.topics)
-    print(type(st.session_state.topics))
-
+    
     with open("topics.txt", "w") as f:
         for char in st.session_state.topics:
             if char == "[" or char == "]" or char == "'":
                 continue
             else:
                 f.write(char)
-
+    print(st.session_state.generated)
 
 def rebuild_index():
     with st.spinner('Cramming documents... Hold on! This may take a while...'):
@@ -76,21 +68,19 @@ def rebuild_index():
             print("Loading vectorstore...")
         chain = get_chain(vectorstore)
 
-
-
 # From here down is all the StreamLit UI.
 im = Image.open('content/App_Icon.png')
 st.set_page_config(page_title="NakheelGPT", page_icon=im)
 
-# hide_default_format = """
-#        <style>
-#        #MainMenu {visibility: hidden; }
-#        footer {visibility: hidden;}
-#        </style>
-#        """
-# st.markdown(hide_default_format, unsafe_allow_html=True)
+hide_default_format = """
+       <style>
+       #MainMenu {visibility: hidden; }
+       footer {visibility: hidden;}
+       </style>
+       """
+st.markdown(hide_default_format, unsafe_allow_html=True)
 
-st.sidebar.title(":darkblue[NakheelGPT Demo]")
+st.sidebar.title("NakheelGPT Demo")
 st.sidebar.caption("Next-Gen ChatBot built on top of the state of the art AI model - ChatGPT.")
 
 with st.sidebar.expander("Upload a document you would like to chat about! 🚀"):
@@ -104,24 +94,23 @@ with st.sidebar.expander("Upload a document you would like to chat about! 🚀")
         st.write("File uploaded successfully")
         with st.spinner('Cramming document...'):
             embed_doc()
-    # open vectorstore.pkl if it exists in current directory
-    if "vectorstore.pkl" in os.listdir("."):
-        with open("vectorstore.pkl", "rb") as f:
-            
-            vectorstore = pickle.load(f)
-            print("Loading vectorstore...")
 
-        chain = get_chain(vectorstore)
+# open vectorstore.pkl if it exists in current directory
+if "vectorstore.pkl" in os.listdir("."):
+    with open("vectorstore.pkl", "rb") as f:
+        
+        vectorstore = pickle.load(f)
+        print("Loading vectorstore...")
 
-    if "generated" not in st.session_state:
-        st.session_state["generated"] = []
+    chain = get_chain(vectorstore)
 
-    if "past" not in st.session_state:
-        st.session_state["past"] = []
+if "generated" not in st.session_state:
+    st.session_state["generated"] = []
+
+if "past" not in st.session_state:
+    st.session_state["past"] = []
 
 
-
-# placeholder = st.empty()
 
 st.text_input("Talk to NakheelGPT: ", value="",  key="input", on_change=generate_answer)
 

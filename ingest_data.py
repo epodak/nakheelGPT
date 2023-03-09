@@ -5,8 +5,6 @@ from langchain.embeddings import OpenAIEmbeddings
 import pickle
 import os
 
-
-
 # loader = UnstructuredFileLoader("state_of_the_union.txt")
 def embed_doc():
     #check data folder is not empty
