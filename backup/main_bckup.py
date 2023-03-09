@@ -3,10 +3,6 @@ import streamlit as st
 from streamlit_chat import message
 from PIL import Image
 
-import os
-os.environ["OPENAI_API_KEY"] = "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"
-os.environ["OPENAI_API_ORGANIZATION"] = "org-lwaUBVlPJVS50wZwghHFihUA"
-
 from langchain.llms import OpenAI
 from ingest_data import embed_doc
 from query_data import _template, CONDENSE_QUESTION_PROMPT, QA_PROMPT, get_chain
