@@ -132,7 +132,7 @@ if "topics.txt" in os.listdir("."):
                 wiki_search(topics[2])
                 rebuild_index()
 
-im_logo = Image.open("content/nakheel_logo_3.png")
+im_logo = Image.open("content/nakheel_logo.png")
 st.sidebar.image(im_logo, use_column_width='auto')
 
 if st.session_state["generated"]:
