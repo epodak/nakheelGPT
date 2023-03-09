@@ -1,12 +1,10 @@
-from langchain.text_splitter import RecursiveCharacterTextSplitter, CharacterTextSplitter
-from langchain.document_loaders import UnstructuredFileLoader, DirectoryLoader
-# from langchain.vectorstores.faiss import FAISS
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.document_loaders import DirectoryLoader
 from langchain.embeddings import OpenAIEmbeddings
 import pickle
 import os
 from langchain.vectorstores import Chroma
 
-# loader = UnstructuredFileLoader("state_of_the_union.txt")
 def embed_doc():
     #check data folder is not empty
     if len(os.listdir("data")) > 0:
@@ -28,21 +26,7 @@ def embed_doc():
         embeddings = OpenAIEmbeddings()
         print("222")
         # vectorstore = FAISS.from_documents(documents, embeddings)
-        vectorstore = Chroma.from_documents(documents, embeddings)
+        vectorstore = Chroma.from_documents(documents, embeddings, persist_directory=persist_directory)
+        vectorstore.persist()
+        vectorstore = None
         print("333")
-
-
-        # Save vectorstore
-        # check if vectorstore.pkl exists
-        with open("vectorstore.pkl", "wb") as f:
-            pickle.dump(vectorstore, f)
-
-
-# check if vectorstore.pkl exists
-if  os.path.exists("vectorstore.pkl"):
-    with open("vectorstore.pkl", 'rb') as f:
-        docsearch = pickle.load(f)
-
-# query = input("Enter your query: ")
-# docs = docsearch.similarity_search(query)
-# print(docs[0])

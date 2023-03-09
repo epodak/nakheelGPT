@@ -71,7 +71,7 @@ def rebuild_index():
         chain = get_chain(vectorstore)
 
 vectorstore = Chroma(persist_directory="db/", embedding_function=OpenAIEmbeddings())        
-print("Loading vectorstore...")
+print("Loaded vectorstore...")
 chain = get_chain(vectorstore)
 
 # From here down is all the StreamLit UI.
@@ -101,15 +101,6 @@ with st.sidebar.expander("Upload a document you would like to chat about! 🚀")
         with st.spinner('Cramming document...'):
             embed_doc()
 
-# open vectorstore.pkl if it exists in current directory
-# if "vectorstore.pkl" in os.listdir("."):
-#     with open("vectorstore.pkl", "rb") as f:
-        
-#         vectorstore = pickle.load(f)
-#         print("Loading vectorstore...")
-
-#     chain = get_chain(vectorstore)
-
 if "generated" not in st.session_state:
     st.session_state["generated"] = []
 
@@ -131,16 +122,17 @@ col1, col2, col3 = st.sidebar.columns(3)
 if "topics.txt" in os.listdir("."):
     with open("topics.txt", "r") as f:
         topics = f.read().split(",")
-        print(topics)
-        if col1.button(topics[0]):
-            wiki_search(topics[0])
-            rebuild_index()
-        if col2.button(topics[1]):
-            wiki_search(topics[1])
-            rebuild_index()
-        if col3.button(topics[2]):
-            wiki_search(topics[2])
-            rebuild_index()
+        if len(topics) >= 3: 
+            print(topics)
+            if col1.button(topics[0]):
+                wiki_search(topics[0])
+                rebuild_index()
+            if col2.button(topics[1]):
+                wiki_search(topics[1])
+                rebuild_index()
+            if col3.button(topics[2]):
+                wiki_search(topics[2])
+                rebuild_index()
 
 if st.session_state["generated"]:
 
