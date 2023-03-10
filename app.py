@@ -2,6 +2,7 @@
 import streamlit as st
 from streamlit_chat import message
 import streamlit_authenticator as stauth
+from streamlit_option_menu import option_menu
 import yaml
 from yaml.loader import SafeLoader
 from PIL import Image
@@ -114,68 +115,71 @@ hide_default_format = """
 
 if authentication_status:
     st.markdown(hide_default_format, unsafe_allow_html=True)
-    st.title("NakheelGPT Demo")
+    st.title("NakheelGPT")
     st.caption("Next-Gen ChatBot built on top of the state of the art AI model - ChatGPT.")
     st.markdown("#")
     initials = ''.join([x[0].upper() for x in st.session_state["name"].split(' ')])
+    
     st.sidebar.write(f'# Welcome {st.session_state["name"]}')
     authenticator.logout("Logout", "sidebar")
     st.sidebar.markdown("###")
-    with st.sidebar.expander("Upload a document you would like to chat about! 🚀"):
-        uploaded_file = st.file_uploader("Upload",type=None, accept_multiple_files=False, key=None, help=None, on_change=None, args=None, kwargs=None, disabled=False, label_visibility="hidden")
-
+    with st.sidebar:
+        selected = option_menu(None, ["NakheelGPT","Upload", 'Settings'], 
+                               icons=['chat-dots-fill','cloud-arrow-up-fill', 'gear-fill'], menu_icon="cast", default_index=0)
+    
+    
+    if selected == "Upload":
+        uploaded_file = st.file_uploader("Upload a document you would like to chat about! 🚀",type=None, accept_multiple_files=False, key=None, help=None, on_change=None, args=None, kwargs=None, disabled=False, label_visibility="visible")
         # check if file is uploaded and file does not exist in data folder
         if uploaded_file is not None and uploaded_file.name not in os.listdir("data"):
             # write the file to data directory
             with open("data/" + uploaded_file.name, "wb") as f:
                 f.write(uploaded_file.getbuffer())
             st.write("File uploaded successfully")
-            with st.spinner('Cramming document...'):
+            with st.spinner('Cramming documents into silicon...'):
                 embed_doc()
+    elif selected == "Settings":
+        st.markdown("### Still building this page, come back later... 🛠️")
+    else:
+        if "generated" not in st.session_state:
+            st.session_state["generated"] = []
 
-    if "generated" not in st.session_state:
-        st.session_state["generated"] = []
+        if "past" not in st.session_state:
+            st.session_state["past"] = []
 
-    if "past" not in st.session_state:
-        st.session_state["past"] = []
+        st.markdown("Are you interested in these topics? Click to add their wiki articles to my knowledge base  🧠")
 
-    st.sidebar.markdown("#")
-    st.sidebar.markdown("#")
-    st.sidebar.markdown("#")
+        # PART 2 ADDED: BUTTONS FOR WIKI ARTICLES
+        # buttons need to be in a separate column
+        col1, col2, col3 = st.columns(3)
+        if "topics.txt" in os.listdir("."):
+            with open("topics.txt", "r") as f:
+                topics = f.read().split(",")
+                if len(topics) >= 3: 
+                    print(topics)
+                    if col1.button(topics[0],use_container_width=True):
+                        wiki_search(topics[0])
+                        rebuild_index()
+                    if col2.button(topics[1],use_container_width=True):
+                        wiki_search(topics[1])
+                        rebuild_index()
+                    if col3.button(topics[2],use_container_width=True):
+                        wiki_search(topics[2])
+                        rebuild_index()
+
+        st.markdown("#")          
+        st.text_input("**Chat with NakheelGPT:**", value="",  key="input", on_change=generate_answer)
+
+        if st.session_state["generated"]:
+
+            for i in range(len(st.session_state["generated"]) - 1, -1, -1):
+                
+                message(st.session_state["generated"][i], key=str(i), avatar_style="bottts", seed="nakheel")
+                message(st.session_state["past"][i], is_user=True, key=str(i) + "_user", avatar_style="initials", seed=initials)
+    
     st.sidebar.markdown("***")
-    st.markdown("Do these topics interest you? Click the button below to add it's wiki articles to my knowledge base 🧠")
-
-    # PART 2 ADDED: BUTTONS FOR WIKI ARTICLES
-    # buttons need to be in a separate column
-    col1, col2, col3 = st.columns(3)
-    if "topics.txt" in os.listdir("."):
-        with open("topics.txt", "r") as f:
-            topics = f.read().split(",")
-            if len(topics) >= 3: 
-                print(topics)
-                if col1.button(topics[0],use_container_width=True,type="primary"):
-                    wiki_search(topics[0])
-                    rebuild_index()
-                if col2.button(topics[1],use_container_width=True,type="primary"):
-                    wiki_search(topics[1])
-                    rebuild_index()
-                if col3.button(topics[2],use_container_width=True,type="primary"):
-                    wiki_search(topics[2])
-                    rebuild_index()
-
-    st.markdown("#")          
-    st.text_input("Talk to NakheelGPT: ", value="",  key="input", on_change=generate_answer)
-
     im_logo = Image.open("content/nakheel_logo.png")
     st.sidebar.image(im_logo, use_column_width='auto')
-
-    if st.session_state["generated"]:
-
-        for i in range(len(st.session_state["generated"]) - 1, -1, -1):
-            
-            message(st.session_state["generated"][i], key=str(i), avatar_style="bottts", seed="Work")
-            message(st.session_state["past"][i], is_user=True, key=str(i) + "_user", avatar_style="initials", seed=initials)
-
 elif authentication_status is False:
     st.error('Username/password is incorrect')
 elif authentication_status is None:

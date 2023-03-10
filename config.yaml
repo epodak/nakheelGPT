@@ -4,14 +4,18 @@ cookie:
   name: nakheel_cookie
 credentials:
   usernames:
-    rdebbane:
-      email: rbriggs@gmail.com
-      name: Rebecca Briggs
-      password: $2b$12$VEyyIaZNws2Pfk2pAxfRJe23YQm6OD6.wVgvUCJFDQs8JyjpLWa1i
+    caroline:
+      email: caroline.sibai@artefact.com
+      name: Caroline Sibai
+      password: $2b$12$JhVUhWU9LtfQBSo7Ifr84edh1.glts3amS8r1e/N0rLAnLNlnERWq   
+    roland:
+      email: roland.debbane@artefact.com
+      name: Roland Debbane
+      password: $2b$12$JhVUhWU9LtfQBSo7Ifr84edh1.glts3amS8r1e/N0rLAnLNlnERWq
     yedhu:
-      email: me@mail.com
+      email: yedhu.krishna@artefact.com
       name: Yedhu Krishna
-      password: $2b$12$wONxBSvSGxI0lJ6dZmJBGe3vMcYJ5N4G4fQGmyb08R0ulfCojxmvq
+      password: $2b$12$JhVUhWU9LtfQBSo7Ifr84edh1.glts3amS8r1e/N0rLAnLNlnERWq
 preauthorized:
   emails:
   - me@mail.com

@@ -6,3 +6,4 @@ streamlit-chat
 streamlit-authenticator
 unstructured
 Wikipedia-API
+streamlit-option-menu
