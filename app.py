@@ -22,13 +22,13 @@ wiki_doc = wikipediaapi.Wikipedia(
 )
 
 
-def register_user():
-    if st.button('New User? Register here'):
-        try:
-            if authenticator.register_user('Register user', preauthorization=False):
-                st.success('User registered successfully')
-        except Exception as e:
-            st.error(e)
+# def register_user():
+#     if st.button('New User? Register here'):
+#         try:
+#             if authenticator.register_user('Register user', preauthorization=False):
+#                 st.success('User registered successfully')
+#         except Exception as e:
+#             st.error(e)
 
 
 def encrypt_password():
@@ -142,12 +142,12 @@ name, authentication_status, username = authenticator.login("Login", "main")
 
 if st.session_state["authentication_status"] == False:
     st.error("Username/password is incorrect")
-    register_user()
+    # register_user()
 
 
 elif st.session_state["authentication_status"] == None:
     st.warning("Please enter your username and password")
-    register_user() 
+    # register_user() 
 
 
 elif st.session_state["authentication_status"]:
