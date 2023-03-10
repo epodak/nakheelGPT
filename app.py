@@ -138,19 +138,10 @@ authenticator = stauth.Authenticate(
 )
 
 name, authentication_status, username = authenticator.login("Login", "main")
+print("**************************************")
 
 
-if st.session_state["authentication_status"] == False:
-    st.error("Username/password is incorrect")
-    # register_user()
-
-
-elif st.session_state["authentication_status"] == None:
-    st.warning("Please enter your username and password")
-    # register_user() 
-
-
-elif st.session_state["authentication_status"]:
+if st.session_state["authentication_status"]:
     print("#####################################")
     st.title("NakheelGPT")
     st.caption(
@@ -241,3 +232,12 @@ elif st.session_state["authentication_status"]:
                 avatar_style="initials",
                 seed=initials,
             )
+
+elif st.session_state["authentication_status"] == False:
+    st.error("Username/password is incorrect")
+    # register_user()
+
+
+elif st.session_state["authentication_status"] == None:
+    st.warning("Please enter your username and password")
+    # register_user() 
