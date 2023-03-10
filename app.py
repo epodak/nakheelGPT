@@ -19,9 +19,15 @@ import wikipediaapi
 im_icon = Image.open("content/nakheel_icon.png")
 st.set_page_config(page_title="NakheelGPT", page_icon=im_icon)
 
+
+vectorstore = Chroma(persist_directory="db/", embedding_function=OpenAIEmbeddings())
+print("Loaded vectorstore...")
+chain = get_chain(vectorstore)
+
 def encrypt_password():
-    with open("config.yaml") as file:
-        config = yaml.load(file, Loader=SafeLoader)
+    if not config:
+        with open("config.yaml") as file:
+            config = yaml.load(file, Loader=SafeLoader)
     #     for user in config["credentials"]["usernames"]:
     #         key = config["credentials"]["usernames"][user]["password"]
     #         if key.startswith("$") == False:
@@ -142,13 +148,6 @@ if authentication_status:
     st.markdown(hide_default_format, unsafe_allow_html=True)
     print("1**************************************")
 
-
-
-
-
-    vectorstore = Chroma(persist_directory="db/", embedding_function=OpenAIEmbeddings())
-    print("Loaded vectorstore...")
-    chain = get_chain(vectorstore)
     
     print("4################################################")
     st.title("NakheelGPT")
