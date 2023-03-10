@@ -34,15 +34,15 @@ wiki_doc = wikipediaapi.Wikipedia(
 def encrypt_password():
     with open("config.yaml") as file:
         config = yaml.load(file, Loader=SafeLoader)
-        for user in config["credentials"]["usernames"]:
-            key = config["credentials"]["usernames"][user]["password"]
-            if key.startswith("$") == False:
-                enc_key = stauth.Hasher([key]).generate()
-                print(enc_key[0])
-                config["credentials"]["usernames"][user]["password"] = enc_key[0]
+    #     for user in config["credentials"]["usernames"]:
+    #         key = config["credentials"]["usernames"][user]["password"]
+    #         if key.startswith("$") == False:
+    #             enc_key = stauth.Hasher([key]).generate()
+    #             print(enc_key[0])
+    #             config["credentials"]["usernames"][user]["password"] = enc_key[0]
 
-    with open("config.yaml", "w") as file:
-        file.write(yaml.dump(config, default_flow_style=False))
+    # with open("config.yaml", "w") as file:
+    #     file.write(yaml.dump(config, default_flow_style=False))
 
     return config
 
@@ -107,10 +107,9 @@ def rebuild_index():
         chain = get_chain(vectorstore)
 
 
-vectorstore = Chroma(persist_directory="db/", embedding_function=OpenAIEmbeddings())
-print("Loaded vectorstore...")
-chain = get_chain(vectorstore)
 
+
+print("0**************************************")
 
 # From here down is all the StreamLit UI.
 im_icon = Image.open("content/nakheel_icon.png")
@@ -123,11 +122,13 @@ hide_default_format = """
        </style>
        """
 st.markdown(hide_default_format, unsafe_allow_html=True)
+print("1**************************************")
 
 
 ####
 # Authentication Setup
 config = encrypt_password()
+print("2**************************************")
 
 authenticator = stauth.Authenticate(
     config["credentials"],
@@ -138,11 +139,14 @@ authenticator = stauth.Authenticate(
 )
 
 name, authentication_status, username = authenticator.login("Login", "main")
-print("**************************************")
+print("3**************************************")
 
 
-if st.session_state["authentication_status"]:
-    print("#####################################")
+if authentication_status:
+    vectorstore = Chroma(persist_directory="db/", embedding_function=OpenAIEmbeddings())
+    print("Loaded vectorstore...")
+    chain = get_chain(vectorstore)
+    print("4################################################")
     st.title("NakheelGPT")
     st.caption(
         "Next-Gen ChatBot built on top of the state of the art AI model - ChatGPT."
@@ -233,11 +237,11 @@ if st.session_state["authentication_status"]:
                 seed=initials,
             )
 
-elif st.session_state["authentication_status"] == False:
+elif authentication_status == False:
     st.error("Username/password is incorrect")
     # register_user()
 
 
-elif st.session_state["authentication_status"] == None:
+elif authentication_status == None:
     st.warning("Please enter your username and password")
     # register_user() 
