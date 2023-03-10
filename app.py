@@ -25,9 +25,8 @@ print("Loaded vectorstore...")
 chain = get_chain(vectorstore)
 
 def encrypt_password():
-    if not config:
-        with open("config.yaml") as file:
-            config = yaml.load(file, Loader=SafeLoader)
+    with open("config.yaml") as file:
+        config = yaml.load(file, Loader=SafeLoader)
     #     for user in config["credentials"]["usernames"]:
     #         key = config["credentials"]["usernames"][user]["password"]
     #         if key.startswith("$") == False:
