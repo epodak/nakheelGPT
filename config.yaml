@@ -1,0 +1,17 @@
+cookie:
+  expiry_days: 1
+  key: pwcm
+  name: nakheel_cookie
+credentials:
+  usernames:
+    rdebbane:
+      email: rbriggs@gmail.com
+      name: Rebecca Briggs
+      password: $2b$12$VEyyIaZNws2Pfk2pAxfRJe23YQm6OD6.wVgvUCJFDQs8JyjpLWa1i
+    yedhu:
+      email: me@mail.com
+      name: Yedhu Krishna
+      password: $2b$12$wONxBSvSGxI0lJ6dZmJBGe3vMcYJ5N4G4fQGmyb08R0ulfCojxmvq
+preauthorized:
+  emails:
+  - me@mail.com

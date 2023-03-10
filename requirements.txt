@@ -3,5 +3,6 @@ openai
 chromadb
 streamlit
 streamlit-chat
+streamlit-authenticator
 unstructured
 Wikipedia-API
