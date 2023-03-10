@@ -155,11 +155,13 @@ if authentication_status:
     st.markdown("###")
 
     st.sidebar.write(f'# Welcome {st.session_state["name"]}!')
-    initials = ''.join([x[0].upper() for x in st.session_state["name"].split(' ')])
+    # initials = ''.join([x[0].upper() for x in st.session_state["name"].split(' ')])
+    initials = 'YM'
 
     authenticator.logout("Logout", "sidebar")
     st.sidebar.markdown("***")    
     st.sidebar.markdown("###")    
+    print("4.5################################################")
 
     with st.sidebar.expander("Upload a document you would like to chat about 🚀"):
         uploaded_file = st.file_uploader(
@@ -174,7 +176,7 @@ if authentication_status:
             disabled=False,
             label_visibility="hidden",
         )
-
+        print("4.75################################################")
         # check if file is uploaded and file does not exist in data folder
         if uploaded_file is not None and uploaded_file.name not in os.listdir("data"):
             # write the file to data directory
