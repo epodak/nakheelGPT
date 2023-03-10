@@ -151,93 +151,93 @@ elif st.session_state["authentication_status"] == None:
 
 
 elif st.session_state["authentication_status"]:
+    print("#####################################")
     st.title("NakheelGPT")
-    
-st.caption(
-    "Next-Gen ChatBot built on top of the state of the art AI model - ChatGPT."
-)
-st.markdown("###")
+    st.caption(
+        "Next-Gen ChatBot built on top of the state of the art AI model - ChatGPT."
+    )
+    st.markdown("###")
 
-st.sidebar.write(f'# Welcome {st.session_state["name"]}!')
-initials = ''.join([x[0].upper() for x in st.session_state["name"].split(' ')])
+    st.sidebar.write(f'# Welcome {st.session_state["name"]}!')
+    initials = ''.join([x[0].upper() for x in st.session_state["name"].split(' ')])
 
-authenticator.logout("Logout", "sidebar")
-st.sidebar.markdown("***")    
-st.sidebar.markdown("###")    
+    authenticator.logout("Logout", "sidebar")
+    st.sidebar.markdown("***")    
+    st.sidebar.markdown("###")    
 
-with st.sidebar.expander("Upload a document you would like to chat about 🚀"):
-    uploaded_file = st.file_uploader(
-        "Upload",
-        type=None,
-        accept_multiple_files=False,
-        key=None,
-        help=None,
-        on_change=None,
-        args=None,
-        kwargs=None,
-        disabled=False,
-        label_visibility="hidden",
+    with st.sidebar.expander("Upload a document you would like to chat about 🚀"):
+        uploaded_file = st.file_uploader(
+            "Upload",
+            type=None,
+            accept_multiple_files=False,
+            key=None,
+            help=None,
+            on_change=None,
+            args=None,
+            kwargs=None,
+            disabled=False,
+            label_visibility="hidden",
+        )
+
+        # check if file is uploaded and file does not exist in data folder
+        if uploaded_file is not None and uploaded_file.name not in os.listdir("data"):
+            # write the file to data directory
+            with open("data/" + uploaded_file.name, "wb") as f:
+                f.write(uploaded_file.getbuffer())
+            st.write("File uploaded successfully")
+            with st.spinner("Cramming document..."):
+                embed_doc()
+
+    if "generated" not in st.session_state:
+        st.session_state["generated"] = []
+
+    if "past" not in st.session_state:
+        st.session_state["past"] = []
+
+    st.markdown(
+        "Do these topics interest you? Click the button below to add it's wiki articles to my knowledge base 🧠"
     )
 
-    # check if file is uploaded and file does not exist in data folder
-    if uploaded_file is not None and uploaded_file.name not in os.listdir("data"):
-        # write the file to data directory
-        with open("data/" + uploaded_file.name, "wb") as f:
-            f.write(uploaded_file.getbuffer())
-        st.write("File uploaded successfully")
-        with st.spinner("Cramming document..."):
-            embed_doc()
+    # PART 2 ADDED: BUTTONS FOR WIKI ARTICLES
+    # buttons need to be in a separate column
+    col1, col2, col3 = st.columns(3)
+    if "topics.txt" in os.listdir("."):
+        with open("topics.txt", "r") as f:
+            topics = f.read().split(",")
+            if len(topics) >= 3:
+                print(topics)
+                if col1.button(topics[0]):
+                    wiki_search(topics[0])
+                    rebuild_index()
+                if col2.button(topics[1]):
+                    wiki_search(topics[1])
+                    rebuild_index()
+                if col3.button(topics[2]):
+                    wiki_search(topics[2])
+                    rebuild_index()
+    
+    st.markdown("#")
+    st.text_input("Talk to NakheelGPT: ", value="", key="input", on_change=generate_answer)
 
-if "generated" not in st.session_state:
-    st.session_state["generated"] = []
+    st.sidebar.markdown("#")
 
-if "past" not in st.session_state:
-    st.session_state["past"] = []
+    im_logo = Image.open("content/nakheel_logo.png")
+    st.sidebar.image(im_logo, use_column_width="auto")
 
-st.markdown(
-    "Do these topics interest you? Click the button below to add it's wiki articles to my knowledge base 🧠"
-)
+    if st.session_state["generated"]:
 
-# PART 2 ADDED: BUTTONS FOR WIKI ARTICLES
-# buttons need to be in a separate column
-col1, col2, col3 = st.columns(3)
-if "topics.txt" in os.listdir("."):
-    with open("topics.txt", "r") as f:
-        topics = f.read().split(",")
-        if len(topics) >= 3:
-            print(topics)
-            if col1.button(topics[0]):
-                wiki_search(topics[0])
-                rebuild_index()
-            if col2.button(topics[1]):
-                wiki_search(topics[1])
-                rebuild_index()
-            if col3.button(topics[2]):
-                wiki_search(topics[2])
-                rebuild_index()
+        for i in range(len(st.session_state["generated"]) - 1, -1, -1):
 
-st.markdown("#")
-st.text_input("Talk to NakheelGPT: ", value="", key="input", on_change=generate_answer)
-
-st.sidebar.markdown("#")
-
-im_logo = Image.open("content/nakheel_logo.png")
-st.sidebar.image(im_logo, use_column_width="auto")
-
-if st.session_state["generated"]:
-
-    for i in range(len(st.session_state["generated"]) - 1, -1, -1):
-
-        message(
-            st.session_state["generated"][i],
-            key=str(i),
-            avatar_style="bottts",
-            seed="Work",
-        )
-        message(
-            st.session_state["past"][i],
-            is_user=True,
-            key=str(i) + "_user",
-            avatar_style="initials",
-            seed=initials,
-        )
+            message(
+                st.session_state["generated"][i],
+                key=str(i),
+                avatar_style="bottts",
+                seed="Work",
+            )
+            message(
+                st.session_state["past"][i],
+                is_user=True,
+                key=str(i) + "_user",
+                avatar_style="initials",
+                seed=initials,
+            )
