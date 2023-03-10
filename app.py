@@ -16,6 +16,9 @@ from langchain.embeddings import OpenAIEmbeddings
 from langchain.callbacks import get_openai_callback
 import wikipediaapi
 
+im_icon = Image.open("content/nakheel_icon.png")
+st.set_page_config(page_title="NakheelGPT", page_icon=im_icon)
+
 def encrypt_password():
     with open("config.yaml") as file:
         config = yaml.load(file, Loader=SafeLoader)
@@ -129,8 +132,6 @@ if authentication_status:
     print("0**************************************")
 
     # From here down is all the StreamLit UI.
-    im_icon = Image.open("content/nakheel_icon.png")
-    st.set_page_config(page_title="NakheelGPT", page_icon=im_icon)
 
     hide_default_format = """
         <style>
