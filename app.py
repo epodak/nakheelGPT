@@ -146,6 +146,7 @@ if authentication_status:
     vectorstore = Chroma(persist_directory="db/", embedding_function=OpenAIEmbeddings())
     print("Loaded vectorstore...")
     chain = get_chain(vectorstore)
+    
     print("4################################################")
     st.title("NakheelGPT")
     st.caption(
@@ -182,7 +183,7 @@ if authentication_status:
             st.write("File uploaded successfully")
             with st.spinner("Cramming document..."):
                 embed_doc()
-
+    print("5################################################")
     if "generated" not in st.session_state:
         st.session_state["generated"] = []
 
@@ -210,7 +211,7 @@ if authentication_status:
                 if col3.button(topics[2]):
                     wiki_search(topics[2])
                     rebuild_index()
-    
+    print("6################################################")
     st.markdown("#")
     st.text_input("Talk to NakheelGPT: ", value="", key="input", on_change=generate_answer)
 
@@ -220,7 +221,7 @@ if authentication_status:
     st.sidebar.image(im_logo, use_column_width="auto")
 
     if st.session_state["generated"]:
-
+        print("7################################################")
         for i in range(len(st.session_state["generated"]) - 1, -1, -1):
 
             message(
